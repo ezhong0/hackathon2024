@@ -1,21 +1,9 @@
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f9;
-  margin: 0;
-  padding: 0;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
+  flex-direction: column;
 
-.login-container {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  max-width: 400px;
-  width: 100%;
+  align-items: center;
+  justify-content: center;
 }
 
 h1 {
@@ -51,7 +39,18 @@ form input[type="submit"]:hover {
   background-color: #218838;
 }
 
-.error {
-  color: red;
-  font-size: 12px;
+.title {
+  display: flex;
+  flex-direction: row;
+
+  gap: 10px;
+
+  justify-content: center;
+  align-items: center;
+
+  width: fit-content;
+}
+
+.logo {
+  width: 40px;
 }
