@@ -26,14 +26,22 @@ def login():
 def signup():
     form = SignUpForm()
     if form.validate_on_submit():
-        user = User(username=form.username.data, email=form.email.data)
-        # user.set_password(form.password.data)  # Assuming you have a method for hashing the password
+        existing_user = User.query.filter((User.username == form.username.data) | (User.email == form.email.data)).first()
+        
+        if existing_user:
+            if existing_user.username == form.username.data:
+                flash('Username already taken. Please choose a different one.')
+            elif existing_user.email == form.email.data:
+                flash('Email already registered. Please use a different one or log in.')
+        else:
+            user = User(username=form.username.data, email=form.email.data)
+            # user.set_password(form.password.data)  # Assuming you have a method for hashing the password
 
-        db.session.add(user)
-        db.session.commit()
+            db.session.add(user)
+            db.session.commit()
 
-        flash('Congratulations, you are now registered! Please complete your profile.')
-        return redirect(url_for('profile', user_id=user.id))  # Pass user ID to the profile creation
+            flash('Congratulations, you are now registered! Please complete your profile.')
+            return redirect(url_for('profile', user_id=user.id))  # Pass user ID to the profile creation
 
     return render_template('signup.html', title='Sign Up', form=form)
 
