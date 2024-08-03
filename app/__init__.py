@@ -16,4 +16,8 @@ def create_app():
     # migrate.init_app(app, db) # uncomment if need 
 
     # session.init_app(app) # uncomment is need 
+    with app.app_context():
+        # Import and register routes
+        from . import routes
+        
     return app
