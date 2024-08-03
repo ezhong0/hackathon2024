@@ -1,3 +1,9 @@
+html,
+body {
+  height: 95%;
+  margin: 0;
+}
+
 body {
   display: flex;
   flex-direction: column;
@@ -22,6 +28,18 @@ form input[type="password"] {
   margin: 5px 0;
   border: 1px solid #ddd;
   border-radius: 4px;
+
+  transition: all 100ms ease-in-out;
+}
+
+form input[type="text"]:hover,
+form input[type="password"]:hover {
+  transform: scale(1.03);
+}
+
+form input[type="text"]:active,
+form input[type="password"]:active {
+  transform: scale(0.99);
 }
 
 form input[type="submit"] {
@@ -33,10 +51,28 @@ form input[type="submit"] {
   color: #fff;
   font-size: 16px;
   cursor: pointer;
+
+  transition: all 100ms ease-in-out;
+}
+
+form input[type="submit"]:hover {
+  transform: scale(1.1);
+}
+
+form input[type="submit"]:active {
+  transform: scale(0.95);
 }
 
 form input[type="submit"]:hover {
   background-color: #218838;
+}
+
+.container {
+  padding: 10px 40px 10px 40px;
+  border-radius: 10px;
+  border: 2px solid rgb(0, 0, 0);
+  align-items: center;
+  justify-content: center;
 }
 
 .title {
