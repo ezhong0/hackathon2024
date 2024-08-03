@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for
 from app import app
-from app.forms import LoginForm, SignUpForm
+from app.forms import LoginForm, SignUpForm, ProfileForm
 from .models import db, User
 
 @app.route('/', methods=['GET', 'POST'])
@@ -37,7 +37,7 @@ def signup():
         db.session.commit()
 
         flash('Congratulations, you are now a registered user!')
-        return redirect(url_for('login'))  # Redirect to the login page after signing up
+        return redirect(url_for('profile'))  # Redirect to the login page after signing up
 
     return render_template('signup.html', title='Sign Up', form=form)  # Render the sign-up template
 
@@ -52,5 +52,5 @@ def profile():
     if form.validate_on_submit():
         flash('User name: {}, Age: {}, Field: {}, Location: {}, selfDescription: {}, Experience: {}, Strength: {}, Goals: {}'.format(
             form.name.data, form.age.data, form.field.data, form.location.data, form.selfDescription.data, form.experience.data, form.strength.data, form.goals.data))
-        return redirect(url_for('profile'))
+        return redirect(url_for('login'))
     return render_template('profile.html', title='Information', form=form)
