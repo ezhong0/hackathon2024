@@ -45,3 +45,12 @@ def signup():
 def list_users():
     users = User.query.all()  # Query all users
     return render_template('users.html', users=users)  # Pass users to a template
+
+@app.route('/profile', methods=['GET', 'POST'])
+def profile():
+    form = ProfileForm()
+    if form.validate_on_submit():
+        flash('User name: {}, Age: {}, Field: {}, Location: {}, selfDescription: {}, Experience: {}, Strength: {}, Goals: {}'.format(
+            form.name.data, form.age.data, form.field.data, form.location.data, form.selfDescription.data, form.experience.data, form.strength.data, form.goals.data))
+        return redirect(url_for('profile'))
+    return render_template('profile.html', title='Information', form=form)
