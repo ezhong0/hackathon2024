@@ -30,3 +30,8 @@ def profile():
 # def list_users():
 #     users = User.query.all()  # Query all users
 #     return render_template('users.html', users=users)  # Pass users to a template
+
+
+@app.route('/register')
+def register():
+    return render_template('register.html')
