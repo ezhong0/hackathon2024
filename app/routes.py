@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, url_for, session  # Import session
+from flask import render_template, flash, redirect, url_for, session
 from app import app
 from app.forms import LoginForm, SignUpForm, ProfileForm
 from .models import db, User
@@ -32,24 +32,18 @@ def signup():
         db.session.add(user)
         db.session.commit()
 
-        flash('Congratulations, you are now a registered user!')
-        return redirect(url_for('profile'))  # Redirect to the profile page after signing up
+        flash('Congratulations, you are now registered! Please complete your profile.')
+        return redirect(url_for('profile', user_id=user.id))  # Pass user ID to the profile creation
 
     return render_template('signup.html', title='Sign Up', form=form)
 
-@app.route('/users')
-def list_users():
-    users = User.query.all()  # Query all users
-    return render_template('users.html', users=users)  # Pass users to a template
-
-@app.route('/profile', methods=['GET', 'POST'])
-def profile():
-    user_id = session.get('user_id')  # Get the user ID from the session
-    if not user_id:
-        flash('Please log in to access your profile.')
-        return redirect(url_for('login'))  # Redirect to login if not logged in
-
+@app.route('/profile/<int:user_id>', methods=['GET', 'POST'])
+def profile(user_id):
     user = User.query.get(user_id)  # Fetch the user from the database
+    if not user:
+        flash('Invalid user. Please sign up first.')
+        return redirect(url_for('signup'))
+
     form = ProfileForm(obj=user)  # Pre-fill the form with existing user data
 
     if form.validate_on_submit():
@@ -64,10 +58,15 @@ def profile():
         
         db.session.commit()  # Save the updated user data to the database
 
-        flash('Profile updated successfully!')
+        flash('Profile updated successfully! Please log in.')
         return redirect(url_for('login'))
 
     return render_template('profile.html', title='Profile', form=form)
+
+@app.route('/users')
+def list_users():
+    users = User.query.all()  # Query all users
+    return render_template('users.html', users=users)  # Pass users to a template
 
 @app.route('/logout')
 def logout():
