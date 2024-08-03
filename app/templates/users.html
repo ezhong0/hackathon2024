@@ -4,7 +4,19 @@
     <h1>User List</h1>
     <ul>
         {% for user in users %}
-            <li>{{ user.username }} - {{ user.email }}</li>
+            <li>
+                <strong>Username:</strong> {{ user.username }} <br>
+                <strong>Email:</strong> {{ user.email }} <br>
+                <strong>Name:</strong> {{ user.name }} <br>
+                <strong>Age:</strong> {{ user.age }} <br>
+                <strong>Field:</strong> {{ user.field }} <br>
+                <strong>Location:</strong> {{ user.location }} <br>
+                <strong>Self Description:</strong> {{ user.self_description }} <br>
+                <strong>Experience:</strong> {{ user.experience }} <br>
+                <strong>Strength:</strong> {{ user.strength }} <br>
+                <strong>Goals:</strong> {{ user.goals }} <br>
+                <hr>
+            </li>
         {% endfor %}
     </ul>
 {% endblock %}

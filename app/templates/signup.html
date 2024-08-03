@@ -1,34 +1,53 @@
-<form method="POST" action="{{ url_for('signup') }}">
+{% extends "base.html" %} {% block head %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='login.css') }}"
+/>
+{% endblock %} {%block body %}
+<div class="container">
+  <div class="title">
+    <img
+      src="{{ url_for('static', filename='images/logo.svg') }}"
+      alt="logo"
+      class="logo"
+    />
+    <h2>Register your Account</h2>
+  </div>
+
+  <form
+    method="POST"
+    action="{{ url_for('signup') }}"
+  >
     {{ form.hidden_tag() }}
     <p>
-        {{ form.username.label }}<br>
-        {{ form.username(size=32) }}<br>
-        {% for error in form.username.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-        {% endfor %}
+      {{ form.username.label }}<br />
+      {{ form.username(size=32, class_='form-control') }}<br />
+      {% for error in form.username.errors %}
+      <span style="color: red">[{{ error }}]</span>
+      {% endfor %}
     </p>
     <p>
-        {{ form.email.label }}<br>
-        {{ form.email(size=32) }}<br>
-        {% for error in form.email.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-        {% endfor %}
+      {{ form.email.label }}<br />
+      {{ form.email(size=32, class_='form-control') }}<br />
+      {% for error in form.email.errors %}
+      <span style="color: red">[{{ error }}]</span>
+      {% endfor %}
     </p>
     <p>
-        {{ form.password.label }}<br>
-        {{ form.password(size=32) }}<br>
-        {% for error in form.password.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-        {% endfor %}
+      {{ form.password.label }}<br />
+      {{ form.password(size=32, class_='form-control') }}<br />
+      {% for error in form.password.errors %}
+      <span style="color: red">[{{ error }}]</span>
+      {% endfor %}
     </p>
     <p>
-        {{ form.password_confirmation.label }}<br>
-        {{ form.password_confirmation(size=32) }}<br>
-        {% for error in form.password_confirmation.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-        {% endfor %}
+      {{ form.password_confirmation.label }}<br />
+      {{ form.password_confirmation(size=32, class_='form-control') }}<br />
+      {% for error in form.password_confirmation.errors %}
+      <span style="color: red">[{{ error }}]</span>
+      {% endfor %}
     </p>
-    <p>
-        {{ form.submit() }}
-    </p>
-</form>
+    <p>{{ form.submit() }}</p>
+  </form>
+</div>
+{%endblock %}
