@@ -1,88 +1,98 @@
-{% extends "base.html" %}{% block head %}
+{% extends "base.html" %} {% block head %}
 <link
   rel="stylesheet"
   href="{{ url_for('static', filename='login.css') }}"
 />
 {% endblock %} {% block body %}
-<h1>Register your Profile</h1>
-<form
-  action=""
-  method="post"
-  novalidate
->
-  {{ form.hidden_tag() }}
-  <!-- name -->
-  <p>
-    {{ form.name.label }}<br />
-    {{ form.name(size=32, class_='form-control') }}<br />
-    {% for error in form.name.errors %}
-    <span style="color: red">[{{ error }}]</span>
-    {% endfor %}
-  </p>
+<div class="container">
+  <div class="title">
+    <img
+      src="{{ url_for('static', filename='images/logo.svg') }}"
+      alt="logo"
+      class="logo"
+    />
+    <h2>Register your Account</h2>
+  </div>
 
-  <!-- age -->
-  <p>
-    {{ form.age.label }}<br />
-    {{ form.age(size=32, class_='form-control') }}<br />
-    {% for error in form.age.errors %}
-    <span style="color: red">[{{ error }}]</span>
-    {% endfor %}
-  </p>
+  <form
+    action=""
+    method="post"
+    novalidate
+  >
+    {{ form.hidden_tag() }}
+    <!-- name -->
+    <p>
+      {{ form.name.label }}<br />
+      {{ form.name(size=32, class_='form-control') }}<br />
+      {% for error in form.name.errors %}
+      <span style="color: red">[{{ error }}]</span>
+      {% endfor %}
+    </p>
 
-  <!-- field -->
-  <p>
-    {{ form.field.label }}<br />
-    {{ form.field(size=32, class_='form-control') }}<br />
-    {% for error in form.field.errors %}
-    <span style="color: red">[{{ error }}]</span>
-    {% endfor %}
-  </p>
+    <!-- age -->
+    <p>
+      {{ form.age.label }}<br />
+      {{ form.age(size=32, class_='form-control') }}<br />
+      {% for error in form.age.errors %}
+      <span style="color: red">[{{ error }}]</span>
+      {% endfor %}
+    </p>
 
-  <!-- location -->
-  <p>
-    {{ form.location.label }}<br />
-    {{ form.location(size=32, class_='form-control') }}<br />
-    {% for error in form.location.errors %}
-    <span style="color: red">[{{ error }}]</span>
-    {% endfor %}
-  </p>
+    <!-- field -->
+    <p>
+      {{ form.field.label }}<br />
+      {{ form.field(size=32, class_='form-control') }}<br />
+      {% for error in form.field.errors %}
+      <span style="color: red">[{{ error }}]</span>
+      {% endfor %}
+    </p>
 
-  <!-- selfDescription -->
-  <p>
-    {{ form.selfDescription.label }}<br />
-    {{ form.selfDescription(size=32, class_ = 'form-control') }}<br />
-    {% for error in form.selfDescription.errors %}
-    <span style="color: red">[{{ error }}]</span>
-    {% endfor %}
-  </p>
+    <!-- location -->
+    <p>
+      {{ form.location.label }}<br />
+      {{ form.location(size=32, class_='form-control') }}<br />
+      {% for error in form.location.errors %}
+      <span style="color: red">[{{ error }}]</span>
+      {% endfor %}
+    </p>
 
-  <!-- experience -->
-  <p>
-    {{ form.experience.label }}<br />
-    {{ form.experience(size=32, class_='form-control') }}<br />
-    {% for error in form.experience.errors %}
-    <span style="color: red">[{{ error }}]</span>
-    {% endfor %}
-  </p>
+    <!-- selfDescription -->
+    <p>
+      {{ form.selfDescription.label }}<br />
+      {{ form.selfDescription(size=32, class_ = 'form-control') }}<br />
+      {% for error in form.selfDescription.errors %}
+      <span style="color: red">[{{ error }}]</span>
+      {% endfor %}
+    </p>
 
-  <!-- strength -->
-  <p>
-    {{ form.strength.label }}<br />
-    {{ form.strength(size=32, class_='form-control') }}<br />
-    {% for error in form.strength.errors %}
-    <span style="color: red">[{{ error }}]</span>
-    {% endfor %}
-  </p>
+    <!-- experience -->
+    <p>
+      {{ form.experience.label }}<br />
+      {{ form.experience(size=32, class_='form-control') }}<br />
+      {% for error in form.experience.errors %}
+      <span style="color: red">[{{ error }}]</span>
+      {% endfor %}
+    </p>
 
-  <!-- goals -->
-  <p>
-    {{ form.goals.label }}<br />
-    {{ form.goals(size=32, class_='form-control') }}<br />
-    {% for error in form.goals.errors %}
-    <span style="color: red">[{{ error }}]</span>
-    {% endfor %}
-  </p>
+    <!-- strength -->
+    <p>
+      {{ form.strength.label }}<br />
+      {{ form.strength(size=32, class_='form-control') }}<br />
+      {% for error in form.strength.errors %}
+      <span style="color: red">[{{ error }}]</span>
+      {% endfor %}
+    </p>
 
-  <p>{{ form.submit(class_='btn btn-primary') }}</p>
-</form>
+    <!-- goals -->
+    <p>
+      {{ form.goals.label }}<br />
+      {{ form.goals(size=32, class_='form-control') }}<br />
+      {% for error in form.goals.errors %}
+      <span style="color: red">[{{ error }}]</span>
+      {% endfor %}
+    </p>
+
+    <p>{{ form.submit(class_='btn btn-primary') }}</p>
+  </form>
+</div>
 {% endblock %}
