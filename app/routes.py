@@ -1,4 +1,5 @@
 from flask import render_template, flash, redirect, url_for, session
+from werkzeug.security import generate_password_hash, check_password_hash  # Import hashing functions
 from app import app
 from app.forms import LoginForm, SignUpForm, ProfileForm
 from .models import db, User
@@ -13,7 +14,7 @@ def login():
         
         user = User.query.filter_by(username=username).first()
         
-        if user:  # and user.check_password(password):  # Verify the password
+        if user and check_password_hash(user.password_hash, password):  # Verify the password
             session['user_id'] = user.id  # Store user ID in session
             flash('Login successful for user {}'.format(username))
             return redirect(url_for('list_users'))  # Redirect to the user list
@@ -34,8 +35,11 @@ def signup():
             elif existing_user.email == form.email.data:
                 flash('Email already registered. Please use a different one or log in.')
         else:
-            user = User(username=form.username.data, email=form.email.data)
-            # user.set_password(form.password.data)  # Assuming you have a method for hashing the password
+            user = User(
+                username=form.username.data,
+                email=form.email.data,
+                password_hash=generate_password_hash(form.password.data)  # Hash the password
+            )
 
             db.session.add(user)
             db.session.commit()
@@ -59,7 +63,7 @@ def profile(user_id):
         user.age = int(form.age.data)  # Convert Decimal to int
         user.field = form.field.data
         user.location = form.location.data
-        user.self_description = form.selfDescription.data
+        user.self_description = form.self_description.data  # Corrected to match the form field name
         user.experience = form.experience.data
         user.strength = form.strength.data
         user.goals = form.goals.data

@@ -1,3 +1,4 @@
+from werkzeug.security import generate_password_hash, check_password_hash
 from typing import Optional
 import sqlalchemy as sa
 import sqlalchemy.orm as so
@@ -26,3 +27,11 @@ class User(db.Model):
             f'location={self.location}, self_description={self.self_description}, '
             f'experience={self.experience}, strength={self.strength}, goals={self.goals})>'
         )
+    
+    def set_password(self, password: str):
+        """Hashes the password and sets it to the password_hash field."""
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password: str) -> bool:
+        """Checks the provided password against the stored password hash."""
+        return check_password_hash(self.password_hash, password)

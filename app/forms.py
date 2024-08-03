@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, DecimalField
-from wtforms.validators import DataRequired, Email, EqualTo
+from wtforms.validators import DataRequired, Email, EqualTo, Length
 
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
@@ -9,18 +9,18 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Sign In')
 
 class SignUpForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
+    username = StringField('Username', validators=[DataRequired(), Length(min=3, max=64)])
     email = StringField('Email', validators=[DataRequired(), Email()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    password_confirmation = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
+    password = PasswordField('Password', validators=[DataRequired(), Length(min=6)])
+    password_confirmation = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password', message='Passwords must match.')])
     submit = SubmitField('Sign Up')
 
 class ProfileForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
-    age = DecimalField('Age ', validators=[DataRequired()])
+    age = DecimalField('Age', validators=[DataRequired()], places=0)  # Use places=0 to ensure it's an integer
     field = StringField('Field', validators=[DataRequired()])
     location = StringField('Location')
-    selfDescription = StringField('Self-Description',validators=[DataRequired()])
+    self_description = StringField('Self-Description', validators=[DataRequired()])  # Changed to match the original field name
     experience = StringField('Experience')
     strength = StringField('Strengths/Skills')
     goals = StringField('Aspirations')
