@@ -1,29 +1,81 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile</title>
-</head>
-<body>
-    <h2>Update Profile</h2>
-    <form method="POST" enctype="multipart/form-data">
+{% extends "base.html" %}
+
+{% block body %}
+    <h1>Sign In</h1>
+    <form action="" method="post" novalidate>
         {{ form.hidden_tag() }}
-        <div>
-            {{ form.bio.label }}<br>
-            {{ form.bio(rows=5) }}
-        </div>
-        <div>
+        <!-- name -->
+        <p>
+            {{ form.name.label }}<br>
+            {{ form.name(size=32) }}<br>
+            {% for error in form.name.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+
+        <!-- age -->
+        <p>
+            {{ form.age.label }}<br>
+            {{ form.age(size=32) }}<br>
+            {% for error in form.age.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+
+        <!-- field -->
+        <p>
+            {{ form.field.label }}<br>
+            {{ form.field(size=32) }}<br>
+            {% for error in form.field.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+
+        <!-- location -->
+        <p>
             {{ form.location.label }}<br>
-            {{ form.location(size=32) }}
-        </div>
-        <div>
-            {{ form.picture.label }}<br>
-            {{ form.picture() }}
-        </div>
-        <div>
-            {{ form.submit() }}
-        </div>
+            {{ form.location(size=32) }}<br>
+            {% for error in form.location.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+
+        <!-- selfDescription -->
+        <p>
+            {{ form.selfDescription.label }}<br>
+            {{ form.selfDescription(size=32) }}<br>
+            {% for error in form.selfDescription.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+
+        <!-- experience -->
+        <p>
+            {{ form.experience.label }}<br>
+            {{ form.experience(size=32) }}<br>
+            {% for error in form.experience.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+
+        <!-- strength -->
+        <p>
+            {{ form.strength.label }}<br>
+            {{ form.strength(size=32) }}<br>
+            {% for error in form.strength.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+
+        <!-- goals -->
+        <p>
+            {{ form.goals.label }}<br>
+            {{ form.goals(size=32) }}<br>
+            {% for error in form.goals.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+
+        <p>{{ form.submit() }}</p>
     </form>
-</body>
-</html>
+{% endblock %}
