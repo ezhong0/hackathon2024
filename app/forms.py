@@ -17,4 +17,4 @@ class ProfileForm(FlaskForm):
     experience = StringField('Experience')
     strength = StringField('Strengths/Skills')
     goals = StringField('Aspirations')
-    submit = SubmitField('create account')
+    submit = SubmitField('Create Account')
