@@ -22,6 +22,7 @@ form p {
 }
 
 form input[type="text"],
+form input[type="number"],
 form input[type="password"] {
   width: calc(100% - 22px);
   padding: 10px;
