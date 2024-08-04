@@ -2,7 +2,7 @@ from flask import render_template, flash, redirect, url_for, session, request
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import app
 from functools import wraps
-from app.forms import LoginForm, SignUpForm, ProfileForm
+from app.forms import LoginForm, SignUpForm, ProfileForm, PreferencesForm
 from .models import db, User
 from app.algorithm import *
 import os
@@ -96,14 +96,12 @@ def profile(user_id):
         user.experience = form.experience.data
         user.strength = form.strength.data
         user.goals = form.goals.data
-        
         if 'profile_photo' in request.files:
             file = request.files['profile_photo']
             if file and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
                 file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
                 file.save(file_path)
-
                 # Crop and resize the image
                 image = Image.open(file_path)
                 image = crop_center(image, PHOTO_SIZE, PHOTO_SIZE)  # Crop and resize to 125x125 pixels
@@ -113,9 +111,33 @@ def profile(user_id):
         
         db.session.commit()
         flash('Profile updated successfully!')
-        return redirect(url_for('login'))
+        return redirect(url_for('preferences', user_id = user_id))
 
     return render_template('profile.html', title='Profile', form=form)
+
+@app.route('/preferences/<int:user_id>', methods=['GET', 'POST'])
+def preferences(user_id):
+    user = User.query.get(user_id)
+    if not user:
+        flash('Invalid user. Please sign up first.')
+        return redirect(url_for('signup'))
+
+    form = PreferencesForm(obj=user)
+
+    if form.validate_on_submit():
+        user.pAge = int(form.pAge.data)
+        user.pField = form.pField.data
+        user.pLocation = form.pLocation.data
+        user.pLocation_lat, user.pLocation_lng = get_coordinates(user.pLocation)
+        user.pGoals = form.pGoals.data
+        user.pQualities = form.pQualities.data
+        db.session.commit()
+
+        db.session.commit()
+        flash('Profile updated successfully!')
+        return redirect(url_for('login'))
+
+    return render_template('preferences.html', title='Preferences', form=form)
 
 def crop_center(pil_img, crop_width, crop_height):
     img_width, img_height = pil_img.size

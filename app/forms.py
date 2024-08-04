@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, DecimalField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, DecimalField, IntegerField
 from wtforms.validators import DataRequired, Email, EqualTo, Length
 from flask_wtf.file import FileField, FileRequired
 
@@ -25,5 +25,13 @@ class ProfileForm(FlaskForm):
     experience = StringField('Experience')
     strength = StringField('Strengths/Skills')
     goals = StringField('Aspirations')
-    submit = SubmitField('Create Account')
     profile_photo = FileField('Profile Photo', validators=[FileRequired()])
+    submit = SubmitField('Create Account')
+
+class PreferencesForm(FlaskForm):
+    pAge = IntegerField('Preferred Age', validators=[DataRequired()])
+    pField = StringField('Preferred Field', validators=[DataRequired()])
+    pLocation = StringField('Preferred Location', validators=[DataRequired()])
+    pGoals = StringField('Preferred Goals', validators=[DataRequired()])
+    pQualities = StringField('Preferred Qualities', validators=[DataRequired()])
+    submit = SubmitField('Update Preferences')
