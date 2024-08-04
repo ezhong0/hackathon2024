@@ -101,3 +101,18 @@ def logout():
     session.pop('user_id', None)  # Remove user ID from session
     flash('You have been logged out.')
     return redirect(url_for('login'))  # Redirect to login page
+
+@app.route('/swipes')
+def swipes():
+    user = {
+        'name': 'John Doe',
+        'location': 'San Francisco, CA',
+        'company': 'Tech Co.',
+        'description': 'A passionate developer.',
+        'background': '5 years in software development.',
+        'word1': 'Innovative',
+        'word2': 'Dedicated',
+        'word3': 'Team Player',
+    }
+    return render_template('swipes.html', user=user)
+    

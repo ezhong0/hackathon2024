@@ -1,0 +1,56 @@
+
+{% extends "base.html" %} {% block head %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='swipes.css') }}"
+/>
+{% endblock %} {% block body %}
+  <body>
+    <div class="card" id="userCard">
+        <div class="card-front">
+          <div class="image-placeholder"></div>
+          <h2>{{user.name}}</h2>
+          <p class="category">Description:</p>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+          <p class="category">Location:</p>
+          <p>Lorem ipsum dolor sit amet</p>
+          <div class="like-dislike">
+            <button onclick="dislikeUser()">Dislike</button>
+            <button onclick="likeUser()">Like</button>
+          </div>
+        </div>
+        <div class="card-back">
+          <h3>My Business:</h3>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+          <p class="category">Experience:</p>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+          <p class="category">Hobbies:</p>
+          <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+          <div class="like-dislike">
+            <button class="dislike" onclick="dislikeUser()">Dislike</button>
+            <button class="like" onclick="likeUser()">Like</button>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="buttons">
+        <button onclick="flipCard()">Flip</button>
+      </div>
+    
+      <script>
+        function flipCard() {
+          document.getElementById("userCard").classList.toggle("flipped");
+        }
+    
+        function likeUser() {
+          // TODO: Add functionality for liking the user
+        }
+    
+        function dislikeUser() {
+          // TODO: Add functionality for disliking the user
+        }
+      </script>
+  </body>
+</html>
+{% endblock %}
