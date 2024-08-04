@@ -1,8 +1,18 @@
 from flask import render_template, flash, redirect, url_for, session
 from werkzeug.security import generate_password_hash, check_password_hash  # Import hashing functions
 from app import app
+from functools import wraps
 from app.forms import LoginForm, SignUpForm, ProfileForm
 from .models import db, User
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'user_id' not in session:
+            flash('You need to log in to access this page.')
+            return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    return decorated_function
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/login', methods=['GET', 'POST'])
@@ -77,11 +87,15 @@ def profile(user_id):
     return render_template('profile.html', title='Profile', form=form)
 
 @app.route('/users')
+@login_required
 def list_users():
     users = User.query.all()  # Query all users
-    return render_template('users.html', users=users)  # Pass users to a template
+    current_user_id = session.get('user_id')  # Get the current user's ID from the session
+    current_user = User.query.get(current_user_id)  # Fetch the current user from the database
 
-@app.route('/logout')
+    return render_template('users.html', users=users, current_user=current_user)  # Pass users and current user to the template
+
+@app.route('/logout', methods=['POST'])
 def logout():
     session.pop('user_id', None)  # Remove user ID from session
     flash('You have been logged out.')
