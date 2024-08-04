@@ -63,6 +63,7 @@ def profile(user_id):
         user.age = int(form.age.data)  # Convert Decimal to int
         user.field = form.field.data
         user.location = form.location.data
+        update_user_location(user.id, user.location)
         user.self_description = form.self_description.data  # Corrected to match the form field name
         user.experience = form.experience.data
         user.strength = form.strength.data
