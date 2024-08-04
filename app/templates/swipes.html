@@ -21,11 +21,16 @@
         <div class="default-image">No Image</div>
         {% endif %}
       </div>
-      <h2>{{ user.name }}</h2>
-      <p class="category">Description:</p>
-      <p>{{ user.description }}</p>
+      <h2 class="name">{{ user.name }}</h2>
+      <h2 class="age">{{ user.age }}</h2>
+      <h2 class="field">{{ user.field }}</h2>
+
       <p class="category">Location:</p>
       <p>{{ user.location }}</p>
+
+      <p class="category">Description:</p>
+      <p>{{ user.description }}</p>
+
       <div class="like-dislike">
         <form
           action="{{ url_for('swipe', action='dislike') }}"
@@ -55,6 +60,8 @@
           <button
             type="submit"
             class="like"
+            id="like"
+            onclick=""
           >
             Like
           </button>
@@ -62,12 +69,14 @@
       </div>
     </div>
     <div class="card-back">
-      <h3>My Business:</h3>
-      <p>{{ user.company }}</p>
-      <p class="category">Experience:</p>
+      <p class="category">Background:</p>
       <p>{{ user.background }}</p>
-      <p class="category">Hobbies:</p>
-      <p>{{ user.word1 }}, {{ user.word2 }}, {{ user.word3 }}</p>
+
+      <p class="category">Strength:</p>
+      <p>{{ user.strength }}</p>
+
+      <p class="category">Goals:</p>
+      <p>{{ user.goals }}</p>
       <div class="like-dislike">
         <form
           action="{{ url_for('swipe', action='dislike') }}"
@@ -81,6 +90,7 @@
           <button
             type="submit"
             class="dislike"
+            id="dislike"
           >
             Dislike
           </button>
@@ -97,6 +107,7 @@
           <button
             type="submit"
             class="like"
+            id="like"
           >
             Like
           </button>
@@ -111,13 +122,9 @@
       document.getElementById("userCard").classList.toggle("flipped");
     }
 
-    function likeUser() {
-      console.log("Liked user");
-    }
+    function likeUser() {}
 
-    function dislikeUser() {
-      // TODO: Add functionality for disliking the user
-    }
+    async function dislikeUser() {}
   </script>
 </body>
 {% endblock %}

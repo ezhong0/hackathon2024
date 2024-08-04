@@ -10,6 +10,7 @@ from werkzeug.utils import secure_filename
 from PIL import Image
 from .algorithm import recommend_user
 from app.messaging import *
+import time
 
 # Define the upload folder and allowed extensions
 UPLOAD_FOLDER = os.path.join('app', 'static', 'uploads')
@@ -190,9 +191,10 @@ def swipes():
         'location': user.location,
         'description': user.self_description,
         'background': user.experience,
-        'word1': user.strength,
-        'word2': 'Innovative',
-        'word3': 'Dedicated',
+        'strength': user.strength,
+        'age': user.age,
+        'field': user.field,
+        'goals': user.goals,
         'image_url': user.profile_photo,  # Include image URL in user data
     }
     
