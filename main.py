@@ -1,4 +1,5 @@
-from app import socketio, app
+from app import app
+# from app import socketio, app
 
 # socketio = SocketIO(app, async_mode='eventlet')
 
