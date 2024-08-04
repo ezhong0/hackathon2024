@@ -11,7 +11,8 @@ def handle_private_message(data):
     print(f'Received message from {sender_id} to {recipient_id}: {message}')
 
     # Use strings for comparison
-    room = f'private_{min(sender_id, recipient_id)}_{max(sender_id, recipient_id)}'
+    #room = f'private_{min(sender_id, recipient_id)}_{max(sender_id, recipient_id)}'
+    room = "room"
     print(f'{room}')
     send({'msg': message, 'sender': sender_id}, room=room)
 
@@ -20,6 +21,8 @@ def on_join(data):
     sender_id = session.get('user_id')
     recipient_id = data['recipient_id']
     
-    room = f'private_{min(str(sender_id), str(recipient_id))}_{max(str(sender_id), str(recipient_id))}'
+    #room = f'private_{min(str(sender_id), str(recipient_id))}_{max(str(sender_id), str(recipient_id))}'
+    room = "room"
+
     join_room(room)
     print(f'User {sender_id} joined room: {room}')

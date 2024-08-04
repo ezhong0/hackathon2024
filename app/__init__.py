@@ -12,7 +12,7 @@ app = Flask(__name__)
 app.config.from_object(Config)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
-socketio = SocketIO(app, async_mode='eventlet')
+#socketio = SocketIO(app, async_mode='eventlet')
 #socketio.run(app, host='0.0.0.0', port=5001)
 
 from app import routes, models
