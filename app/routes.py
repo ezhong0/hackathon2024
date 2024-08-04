@@ -4,6 +4,7 @@ from app import app
 from functools import wraps
 from app.forms import LoginForm, SignUpForm, ProfileForm
 from .models import db, User
+from app.algorithm import *
 
 def login_required(f):
     @wraps(f)
