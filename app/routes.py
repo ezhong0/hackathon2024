@@ -92,20 +92,25 @@ def profile(user_id):
         user.age = int(form.age.data)
         user.field = form.field.data
         user.location = form.location.data
-<<<<<<< HEAD
-        #update_user_location(user.id, user.location)
-        user.self_description = form.self_description.data  # Corrected to match the form field name
-=======
         user.self_description = form.self_description.data
->>>>>>> 74f780b6c9b732eb1003c3c121f8da8a0013f411
         user.experience = form.experience.data
         user.strength = form.strength.data
         user.goals = form.goals.data
-        
-<<<<<<< HEAD
-        #db.session.commit()  # Save the updated user data to the database
+        if 'profile_photo' in request.files:
+            file = request.files['profile_photo']
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                file.save(file_path)
+                # Crop and resize the image
+                image = Image.open(file_path)
+                image = crop_center(image, PHOTO_SIZE, PHOTO_SIZE)  # Crop and resize to 125x125 pixels
+                image.save(file_path)
 
-        flash('Profile updated successfully! Please log in.')
+                user.profile_photo = url_for('static', filename='uploads/' + filename)
+        
+        db.session.commit()
+        flash('Profile updated successfully!')
         return redirect(url_for('preferences', user_id = user_id))
 
     return render_template('profile.html', title='Profile', form=form)
@@ -127,22 +132,7 @@ def preferences(user_id):
         user.pGoals = form.pGoals.data
         user.pQualities = form.pQualities.data
         db.session.commit()
-=======
-        if 'profile_photo' in request.files:
-            file = request.files['profile_photo']
-            if file and allowed_file(file.filename):
-                filename = secure_filename(file.filename)
-                file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-                file.save(file_path)
->>>>>>> 74f780b6c9b732eb1003c3c121f8da8a0013f411
 
-                # Crop and resize the image
-                image = Image.open(file_path)
-                image = crop_center(image, PHOTO_SIZE, PHOTO_SIZE)  # Crop and resize to 125x125 pixels
-                image.save(file_path)
-
-                user.profile_photo = url_for('static', filename='uploads/' + filename)
-        
         db.session.commit()
         flash('Profile updated successfully!')
         return redirect(url_for('login'))

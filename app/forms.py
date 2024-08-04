@@ -25,8 +25,8 @@ class ProfileForm(FlaskForm):
     experience = StringField('Experience')
     strength = StringField('Strengths/Skills')
     goals = StringField('Aspirations')
+    profile_photo = FileField('Profile Photo', validators=[FileRequired()])
     submit = SubmitField('Create Account')
-<<<<<<< HEAD
 
 class PreferencesForm(FlaskForm):
     pAge = IntegerField('Preferred Age', validators=[DataRequired()])
@@ -35,6 +35,3 @@ class PreferencesForm(FlaskForm):
     pGoals = StringField('Preferred Goals', validators=[DataRequired()])
     pQualities = StringField('Preferred Qualities', validators=[DataRequired()])
     submit = SubmitField('Update Preferences')
-=======
-    profile_photo = FileField('Profile Photo', validators=[FileRequired()])
->>>>>>> 74f780b6c9b732eb1003c3c121f8da8a0013f411
