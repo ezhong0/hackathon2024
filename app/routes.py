@@ -28,7 +28,7 @@ def login():
         if user and check_password_hash(user.password_hash, password):  # Verify the password
             session['user_id'] = user.id  # Store user ID in session
             flash('Login successful for user {}'.format(username))
-            return redirect(url_for('list_users'))  # Redirect to the user list
+            return redirect(url_for('swipes'))  # Redirect to swipes
         else:
             flash('Invalid username or password')
 
