@@ -54,3 +54,18 @@ def profile():
             form.name.data, form.age.data, form.field.data, form.location.data, form.selfDescription.data, form.experience.data, form.strength.data, form.goals.data))
         return redirect(url_for('login'))
     return render_template('profile.html', title='Information', form=form)
+
+@app.route('/swipes')
+def swipes():
+    user = {
+        'name': 'John Doe',
+        'location': 'San Francisco, CA',
+        'company': 'Tech Co.',
+        'description': 'A passionate developer.',
+        'background': '5 years in software development.',
+        'word1': 'Innovative',
+        'word2': 'Dedicated',
+        'word3': 'Team Player',
+    }
+    return render_template('swipes.html', user=user)
+    
