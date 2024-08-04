@@ -58,9 +58,9 @@
 
     <!-- selfDescription -->
     <p>
-      {{ form.selfDescription.label }}<br />
-      {{ form.selfDescription(size=32, class_ = 'form-control') }}<br />
-      {% for error in form.selfDescription.errors %}
+      {{ form.self_description.label }}<br />
+      {{ form.self_description(size=32, class_ = 'form-control') }}<br />
+      {% for error in form.self_description.errors %}
       <span style="color: red">[{{ error }}]</span>
       {% endfor %}
     </p>
