@@ -167,7 +167,7 @@ def logout():
 def swipes():
 
     # Fetch the current user from the database
-    current_id = 22 #hardcoded
+    current_id = recomend_user(session.user_id)
     user = User.query.get(current_id)
     
     # Ensure the user exists
