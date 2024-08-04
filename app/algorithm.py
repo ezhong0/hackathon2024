@@ -8,6 +8,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
 import requests
 import math
+from .models import db, User
 
 def get_coordinates(address):
     url = "https://nominatim.openstreetmap.org/search"
@@ -16,8 +17,16 @@ def get_coordinates(address):
         'format': 'json',
         'limit': 1
     }
-    response = requests.get(url, params=params)
-    data = response.json()
+    headers = {
+        'User-Agent': 'YourAppName/1.0 (esdf@gmail.com)'  # Replace with your app name and email
+    }
+    response = requests.get(url, params=params, headers=headers)
+    
+    #response = requests.get(url, params=params)
+    if response.status_code == 200:
+        data = response.json()
+    else:
+        raise Exception(f"Error: {response.status_code}")
     
     if data:
         location = data[0]
