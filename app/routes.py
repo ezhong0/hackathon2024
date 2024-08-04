@@ -9,7 +9,7 @@ import os
 from werkzeug.utils import secure_filename
 from PIL import Image
 from .algorithm import recommend_user
-from app.messaging import *
+#from app.messaging import *
 import time
 
 # Define the upload folder and allowed extensions
