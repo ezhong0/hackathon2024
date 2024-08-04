@@ -25,12 +25,17 @@ class User(db.Model):
 
     profile_photo: so.Mapped[Optional[str]] = so.mapped_column(sa.String(256))  # Store filename or URL
 
+    pAge: so.Mapped[Optional[int]] = so.mapped_column(sa.Integer)
+    pField: so.Mapped[Optional[str]] = so.mapped_column(sa.String(100))
+    pLocation: so.Mapped[Optional[str]] = so.mapped_column(sa.String(100))
+    pGoals: so.Mapped[Optional[str]] = so.mapped_column(sa.Text)
+    pQualities: so.Mapped[Optional[str]] = so.mapped_column(sa.Text)    
     def __repr__(self):
         return (
             f'<User(id={self.id}, username={self.username}, email={self.email}, '
             f'name={self.name}, age={self.age}, field={self.field}, '
             f'location={self.location}, self_description={self.self_description}, '
-            f'experience={self.experience}, strength={self.strength}, goals={self.goals})>'
+            f'experience={self.experience}, strength={self.strength}, goals={self.goals}, profile_photo={self.profile_photo})>'
         )
 
 
