@@ -2,7 +2,7 @@ from flask import render_template, flash, redirect, url_for, session
 from werkzeug.security import generate_password_hash, check_password_hash  # Import hashing functions
 from app import app
 from functools import wraps
-from app.forms import LoginForm, SignUpForm, ProfileForm
+from app.forms import LoginForm, SignUpForm, ProfileForm, PreferencesForm
 from .models import db, User
 from app.algorithm import *
 
@@ -74,18 +74,41 @@ def profile(user_id):
         user.age = int(form.age.data)  # Convert Decimal to int
         user.field = form.field.data
         user.location = form.location.data
-        update_user_location(user.id, user.location)
+        #update_user_location(user.id, user.location)
         user.self_description = form.self_description.data  # Corrected to match the form field name
         user.experience = form.experience.data
         user.strength = form.strength.data
         user.goals = form.goals.data
         
-        db.session.commit()  # Save the updated user data to the database
+        #db.session.commit()  # Save the updated user data to the database
+
+        flash('Profile updated successfully! Please log in.')
+        return redirect(url_for('preferences', user_id = user_id))
+
+    return render_template('profile.html', title='Profile', form=form)
+
+@app.route('/preferences/<int:user_id>', methods=['GET', 'POST'])
+def preferences(user_id):
+    user = User.query.get(user_id)
+    if not user:
+        flash('Invalid user. Please sign up first.')
+        return redirect(url_for('signup'))
+
+    form = PreferencesForm(obj=user)
+
+    if form.validate_on_submit():
+        user.pAge = int(form.pAge.data)
+        user.pField = form.pField.data
+        user.pLocation = form.pLocation.data
+        user.pLocation_lat, user.pLocation_lng = get_coordinates(user.pLocation)
+        user.pGoals = form.pGoals.data
+        user.pQualities = form.pQualities.data
+        db.session.commit()
 
         flash('Profile updated successfully! Please log in.')
         return redirect(url_for('login'))
 
-    return render_template('profile.html', title='Profile', form=form)
+    return render_template('preferences.html', title='Preferences', form=form)
 
 @app.route('/users')
 @login_required
