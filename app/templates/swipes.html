@@ -11,9 +11,9 @@
           <div class="image-placeholder"></div>
           <h2>{{user.name}}</h2>
           <p class="category">Description:</p>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+          <p>{{user.description}}</p>
           <p class="category">Location:</p>
-          <p>Lorem ipsum dolor sit amet</p>
+          <p>{{user.location}}</p>
           <div class="like-dislike">
             <button onclick="dislikeUser()">Dislike</button>
             <button onclick="likeUser()">Like</button>
@@ -21,11 +21,11 @@
         </div>
         <div class="card-back">
           <h3>My Business:</h3>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+          <p>{{user.company}}</p>
           <p class="category">Experience:</p>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+          <p>{{user.background}}</p>
           <p class="category">Hobbies:</p>
-          <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+          <p> {{user.word1}}, {{user.word2}}, {{user.word3}}</p>
           <div class="like-dislike">
             <button class="dislike" onclick="dislikeUser()">Dislike</button>
             <button class="like" onclick="likeUser()">Like</button>
@@ -34,17 +34,18 @@
       </div>
 
 
-      <div class="buttons">
+      <!-- <div class="buttons">
         <button onclick="flipCard()">Flip</button>
-      </div>
+      </div> -->
     
       <script>
+        document.getElementById("userCard").addEventListener("click", flipCard);
         function flipCard() {
           document.getElementById("userCard").classList.toggle("flipped");
         }
     
         function likeUser() {
-          // TODO: Add functionality for liking the user
+          console.log("Liked user");
         }
     
         function dislikeUser() {
