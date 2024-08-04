@@ -9,6 +9,7 @@ import os
 from werkzeug.utils import secure_filename
 from PIL import Image
 from .algorithm import recommend_user
+from app.messaging import *
 
 # Define the upload folder and allowed extensions
 UPLOAD_FOLDER = os.path.join('app', 'static', 'uploads')
@@ -212,3 +213,17 @@ def swipe(action):
     
     # Redirect to the swipes page to show a new random user
     return redirect(url_for('swipes'))
+
+@app.route('/chat/<int:recipient_id>')
+def chat(recipient_id):
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    
+    user = User.query.get(session['user_id'])
+    recipient = User.query.get(recipient_id)
+    
+    if not recipient:
+        flash('User not found')
+        return redirect(url_for('login'))  # Redirect to some home page
+
+    return render_template('chat.html', username=user.username, recipient_username=recipient.username, recipient_id=recipient.id)

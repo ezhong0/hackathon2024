@@ -1,15 +1,19 @@
 from flask import Flask, session
 from config import Config
 from flask_sqlalchemy import SQLAlchemy
+from flask_socketio import SocketIO
 from flask_migrate import Migrate
 import signal
 import sys
 import os
+import eventlet
 
 app = Flask(__name__)
 app.config.from_object(Config)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+socketio = SocketIO(app, async_mode='eventlet')
+#socketio.run(app, host='0.0.0.0', port=5001)
 
 from app import routes, models
 
