@@ -30,7 +30,7 @@ class User(db.Model):
             f'<User(id={self.id}, username={self.username}, email={self.email}, '
             f'name={self.name}, age={self.age}, field={self.field}, '
             f'location={self.location}, self_description={self.self_description}, '
-            f'experience={self.experience}, strength={self.strength}, goals={self.goals})>'
+            f'experience={self.experience}, strength={self.strength}, goals={self.goals}, profile_photo={self.profile_photo})>'
         )
 
 

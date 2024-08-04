@@ -74,7 +74,7 @@ def signup():
             db.session.commit()
 
             flash('Congratulations, you are now registered! Please complete your profile.')
-            return redirect(url_for('profile', user_id=user.id))  # Pass user ID to the profile creation
+            return redirect(url_for('profile', user_id = user.id))  # Pass user ID to the profile creation
 
     return render_template('signup.html', title='Sign Up', form=form)
 
@@ -96,6 +96,7 @@ def profile(user_id):
         user.experience = form.experience.data
         user.strength = form.strength.data
         user.goals = form.goals.data
+
         if 'profile_photo' in request.files:
             file = request.files['profile_photo']
             if file and allowed_file(file.filename):
@@ -112,8 +113,16 @@ def profile(user_id):
         db.session.commit()
         flash('Profile updated successfully!')
         return redirect(url_for('preferences', user_id = user_id))
-
+    
     return render_template('profile.html', title='Profile', form=form)
+
+def crop_center(pil_img, crop_width, crop_height):
+    img_width, img_height = pil_img.size
+    return pil_img.crop(((img_width - crop_width) // 2,
+                         (img_height - crop_height) // 2,
+                         (img_width + crop_width) // 2,
+                         (img_height + crop_height) // 2))
+
 
 @app.route('/preferences/<int:user_id>', methods=['GET', 'POST'])
 def preferences(user_id):
@@ -133,18 +142,10 @@ def preferences(user_id):
         user.pQualities = form.pQualities.data
         db.session.commit()
 
-        db.session.commit()
         flash('Profile updated successfully!')
         return redirect(url_for('login'))
 
     return render_template('preferences.html', title='Preferences', form=form)
-
-def crop_center(pil_img, crop_width, crop_height):
-    img_width, img_height = pil_img.size
-    return pil_img.crop(((img_width - crop_width) // 2,
-                         (img_height - crop_height) // 2,
-                         (img_width + crop_width) // 2,
-                         (img_height + crop_height) // 2))
 
 @app.route('/users')
 @login_required
