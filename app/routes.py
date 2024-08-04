@@ -1,10 +1,11 @@
-from flask import render_template, flash, redirect, url_for, session
+from flask import render_template, flash, redirect, url_for, session, request
 from werkzeug.security import generate_password_hash, check_password_hash  # Import hashing functions
 from app import app
 from functools import wraps
 from app.forms import LoginForm, SignUpForm, ProfileForm
 from .models import db, User
 from app.algorithm import *
+import jsonify
 
 def login_required(f):
     @wraps(f)
@@ -105,15 +106,10 @@ def logout():
 @login_required
 @app.route('/swipes')
 def swipes():
-    user = {
-        'name': 'John Doe',
-        'location': 'San Francisco, CA',
-        'company': 'Tech Co.',
-        'description': 'A passionate developer.',
-        'background': '5 years in software development.',
-        'word1': 'Innovative',
-        'word2': 'Dedicated',
-        'word3': 'Team Player',
-    }
-    return render_template('swipes.html', user=user)
-    
+    # return render_template('swipes.html', user=jsonify(convert_to_dict(recommend_user(session.get('user_id')))))
+    return render_template('swipes.html', user={})
+
+@app.route('/dislike', methods=['POST'])
+def dislike():
+    add_like(session.get('user_id'), request.form['user_id'], False)
+    return jsonify(convert_to_dict(recommend_user(session.get('user_id'))))

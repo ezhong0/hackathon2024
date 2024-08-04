@@ -9,6 +9,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 import requests
 import math
 from .models import db, User
+import re
 from datetime import datetime, timedelta
 
 def get_coordinates(address):
@@ -141,3 +142,15 @@ def recommend_user(target_user_id):
             best_recommendation = user
 
     return best_recommendation
+
+def convert_to_dict(class_repr):
+    # Remove the angle brackets and class name
+    class_repr = class_repr.strip('<>').replace('User(', '').replace(')>', '')
+
+    # Use regex to find key-value pairs
+    pairs = re.findall(r'(\w+)=\{self\.(\w+)\}', class_repr)
+    
+    # Create a dictionary with placeholder values
+    user_data = {key: f'{key}_value' for key, _ in pairs}
+    
+    return user_data

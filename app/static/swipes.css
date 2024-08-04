@@ -108,3 +108,38 @@
   background-color: #ccc;
   margin-bottom: 10px;
 }
+
+.drop-left {
+  /* transform: translate(-5000px, 2000px); */
+  animation: spin-and-delete 500ms ease-in-out forwards;
+}
+
+.drop-in {
+  /* transform: translate(-5000px, 2000px); */
+  animation: drop-in 500ms ease-in-out forwards;
+}
+
+@keyframes spin-and-delete {
+  0% {
+    transform: rotateY(0);
+  }
+  80% {
+    transform: rotateY(360deg);
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    display: none;
+  }
+}
+
+@keyframes drop-in {
+  0% {
+    opacity: 0;
+    transform: translate(0px, -1000px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(0px, 0px);
+  }
+}
