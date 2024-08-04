@@ -10,7 +10,7 @@ def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if 'user_id' not in session:
-            flash('You need to log in to access this page.')
+            flash('You need to log in to access this page. User: 123123 Password: 123123')
             return redirect(url_for('login'))
         return f(*args, **kwargs)
     return decorated_function
@@ -102,6 +102,7 @@ def logout():
     flash('You have been logged out.')
     return redirect(url_for('login'))  # Redirect to login page
 
+@login_required
 @app.route('/swipes')
 def swipes():
     user = {
