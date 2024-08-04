@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>  <!-- Include Socket.IO -->
+    <script>
+        const socket = io();  // Connect to the Socket.IO server
+
+        // Log when connected to the server
+        socket.on('connect', function() {
+            const recipientId = document.getElementById('recipient-id').value;  // Get recipient ID
+            socket.emit('join_private', { recipient_id: recipientId });
+    
+            console.log('Connected to the Socket.IO server');
+        });
+
+        // Log any connection errors
+        socket.on('connect_error', function(error) {
+            console.error('Connection error:', error);
+        });
+
+        // Function to send private message
+        function sendMessage() {
+            const messageInput = document.getElementById('message');
+            const recipientId = document.getElementById('recipient-id').value;  // Get recipient ID
+            const message = messageInput.value;
+            console.log(recipientId);
+
+            if (message) {
+                socket.emit('private_message', {
+                    recipient_id: recipientId,
+                    message: message
+                });
+                
+                // Display the sent message in the chat box
+                displayMessage({sender: 'You', msg: message});  // Use 'You' as sender for the current user
+
+                messageInput.value = '';  // Clear input after sending
+            }
+        }
+
+        // Listen for incoming messages
+        socket.on('private_message', function(data) {
+            console.log("data");
+            displayMessage(data);  // Display received message
+        });
+
+        // Function to display messages in the chat box
+        function displayMessage(data) {
+            const chatBox = document.getElementById('chat-box');
+            chatBox.innerHTML += `<p><strong>${data.sender}:</strong> ${data.msg}</p>`;  // Display message
+            chatBox.scrollTop = chatBox.scrollHeight;  // Auto-scroll to the bottom
+        }
+    </script>
+{% endblock %}
+
+{% block body %}
+    <div>
+        <h2>Chat with User {{ recipient_id }}</h2>
+        <div id="chat-box" style="border: 1px solid #ccc; padding: 10px; height: 300px; overflow-y: scroll;">
+            <!-- Chat messages will be displayed here -->
+        </div>
+        <input type="hidden" id="recipient-id" value="{{ recipient_id }}">  <!-- Hidden input for recipient ID -->
+        <input type="text" id="message" placeholder="Type your message here...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+{% endblock %}
+

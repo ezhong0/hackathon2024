@@ -1,94 +1,123 @@
-
 {% extends "base.html" %} {% block head %}
 <link
   rel="stylesheet"
   href="{{ url_for('static', filename='swipes.css') }}"
 />
 {% endblock %} {% block body %}
-  <body onload="console.log(user)">
-    <p visible="false" id="userID">{{user.id}}</p>
-    <div class="card" id="userCard">
-        <div class="card-front">
-          <div class="image-placeholder"></div>
-          <h2 id="name">{{user.name}}</h2>
-          <p class="category">Description:</p>
-          <p id="description">{{user.description}}</p>
-          <p class="category">Location:</p>
-          <p id="location">{{user.location}}</p>
-          <div class="like-dislike">
-            <button onclick="dislikeUser()">Dislike</button>
-            <button onclick="likeUser()">Like</button>
-          </div>
-        </div>
-        <div class="card-back">
-          <h3>My Business:</h3>
-          <p id="company">{{user.company}}</p>
-          <p class="category">Experience:</p>
-          <p id="background">{{user.background}}</p>
-          <p class="category">Hobbies:</p>
-          <p id="info"> {{user.word1}}, {{user.word2}}, {{user.word3}}</p>
-          <div class="like-dislike">
-            <button class="dislike" onclick="dislikeUser()">Dislike</button>
-            <button class="like" onclick="likeUser()">Like</button>
-          </div>
-        </div>
+<body>
+  <div
+    class="card"
+    id="userCard"
+  >
+    <div class="card-front">
+      <div class="image-placeholder">
+        {% if user.image_url %}
+        <img
+          src="{{ user.image_url }}"
+          alt="{{ user.name }}'s profile photo"
+          class="profile-image"
+        />
+        {% else %}
+        <div class="default-image">No Image</div>
+        {% endif %}
       </div>
+      <h2>{{ user.name }}</h2>
+      <p class="category">Description:</p>
+      <p>{{ user.description }}</p>
+      <p class="category">Location:</p>
+      <p>{{ user.location }}</p>
+      <div class="like-dislike">
+        <form
+          action="{{ url_for('swipe', action='dislike') }}"
+          method="post"
+        >
+          <input
+            type="hidden"
+            name="swiped_user_id"
+            value="{{ user.id }}"
+          />
+          <button
+            type="submit"
+            class="dislike"
+          >
+            Dislike
+          </button>
+        </form>
+        <form
+          action="{{ url_for('swipe', action='like') }}"
+          method="post"
+        >
+          <input
+            type="hidden"
+            name="swiped_user_id"
+            value="{{ user.id }}"
+          />
+          <button
+            type="submit"
+            class="like"
+          >
+            Like
+          </button>
+        </form>
+      </div>
+    </div>
+    <div class="card-back">
+      <h3>My Business:</h3>
+      <p>{{ user.company }}</p>
+      <p class="category">Experience:</p>
+      <p>{{ user.background }}</p>
+      <p class="category">Hobbies:</p>
+      <p>{{ user.word1 }}, {{ user.word2 }}, {{ user.word3 }}</p>
+      <div class="like-dislike">
+        <form
+          action="{{ url_for('swipe', action='dislike') }}"
+          method="post"
+        >
+          <input
+            type="hidden"
+            name="swiped_user_id"
+            value="{{ user.id }}"
+          />
+          <button
+            type="submit"
+            class="dislike"
+          >
+            Dislike
+          </button>
+        </form>
+        <form
+          action="{{ url_for('swipe', action='like') }}"
+          method="post"
+        >
+          <input
+            type="hidden"
+            name="swiped_user_id"
+            value="{{ user.id }}"
+          />
+          <button
+            type="submit"
+            class="like"
+          >
+            Like
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
 
+  <script>
+    document.getElementById("userCard").addEventListener("click", flipCard);
+    function flipCard() {
+      document.getElementById("userCard").classList.toggle("flipped");
+    }
 
-      <!-- <div class="buttons">
-        <button onclick="flipCard()">Flip</button>
-      </div> -->
-    
-      <script>
-        document.getElementById("userCard").addEventListener("click", flipCard);
-        function flipCard() {
-          document.getElementById("userCard").classList.toggle("flipped");
-        }
-    
-        function likeUser() {
-          console.log("Liked user");
-        }
-    
-        async function dislikeUser() {
-            console.log("Dislike");
-            const liked_user = document.getElementById('userID').innerText;
-            //fetch('/dislike', {
-            //    method: 'POST',
-            //    headers: {
-            //        'Content-Type': 'application/json'
-            //    },
-            //    body: JSON.stringify({is_like: false, liked_user: liked_user })
-            //})
-            //.then(response => response.json())
-            //.then(data => {
-            //    document.getElementById('userID').innerText = data.id;
-            //   document.getElementById('name').innerText = data.name;
-            //    document.getElementById('description').innerText = data.description;
-            //    document.getElementById('location').innerText = data.location;
-            //    document.getElementById('company').innerText = data.company;
-            //    document.getElementById('background').innerText = data.background;
-            //    document.getElementById('info').innerText = data.word1 + ', ' + data.word2 + ', ' + data.word3;
-            //    document.getElementById('userCard').classList.remove('flipped');
-            //    
-            //})
-            //.catch(error => console.error('Error:', error));
+    function likeUser() {
+      console.log("Liked user");
+    }
 
-            var card = document.getElementById("userCard");
-            card.classList.add("drop-left");
-
-            await new Promise(r => setTimeout(r, 2000));
-
-            card.classList.remove("drop-left");
-            card.classList.add("drop-in");
-
-            await new Promise(r => setTimeout(r, 550));
-            card.classList.remove("drop-in");
-
-            card.classList.remove('flipped');
-            
-
-        }
-      </script>
-  </body>
-</html>
+    function dislikeUser() {
+      // TODO: Add functionality for disliking the user
+    }
+  </script>
+</body>
 {% endblock %}

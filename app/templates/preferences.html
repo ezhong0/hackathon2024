@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <title>{{ title }}</title>
+{% endblock %}
+
+{% block body %}
+    <h1>Update Your Preferences</h1>
+    <form method="post" action="">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.pAge.label }}<br>
+            {{ form.pAge(size=32) }}<br>
+            {% for error in form.pAge.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.pField.label }}<br>
+            {{ form.pField(size=32) }}<br>
+            {% for error in form.pField.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.pLocation.label }}<br>
+            {{ form.pLocation(size=32) }}<br>
+            {% for error in form.pLocation.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.pGoals.label }}<br>
+            {{ form.pGoals(size=32) }}<br>
+            {% for error in form.pGoals.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.pQualities.label }}<br>
+            {{ form.pQualities(size=32) }}<br>
+            {% for error in form.pQualities.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+{% endblock %}

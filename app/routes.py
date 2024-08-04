@@ -1,11 +1,30 @@
-from flask import render_template, flash, redirect, url_for, session, request
-from werkzeug.security import generate_password_hash, check_password_hash  # Import hashing functions
+from flask import render_template, flash, redirect, url_for, session, request, request
+from werkzeug.security import generate_password_hash, check_password_hash
 from app import app
 from functools import wraps
-from app.forms import LoginForm, SignUpForm, ProfileForm
+from app.forms import LoginForm, SignUpForm, ProfileForm, PreferencesForm
 from .models import db, User
 from app.algorithm import *
-import jsonify
+import os
+from werkzeug.utils import secure_filename
+from PIL import Image
+from .algorithm import recommend_user
+from app.messaging import *
+
+# Define the upload folder and allowed extensions
+UPLOAD_FOLDER = os.path.join('app', 'static', 'uploads')
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}  # Define allowed file extensions
+PHOTO_SIZE = 125
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+# Create the uploads directory if it doesn't exist
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
+
+# Function to check if the file extension is allowed
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def login_required(f):
     @wraps(f)
@@ -57,36 +76,85 @@ def signup():
             db.session.commit()
 
             flash('Congratulations, you are now registered! Please complete your profile.')
-            return redirect(url_for('profile', user_id=user.id))  # Pass user ID to the profile creation
+            return redirect(url_for('profile', user_id = user.id))  # Pass user ID to the profile creation
 
     return render_template('signup.html', title='Sign Up', form=form)
 
 @app.route('/profile/<int:user_id>', methods=['GET', 'POST'])
 def profile(user_id):
-    user = User.query.get(user_id)  # Fetch the user from the database
+    user = User.query.get(user_id)
     if not user:
         flash('Invalid user. Please sign up first.')
         return redirect(url_for('signup'))
 
-    form = ProfileForm(obj=user)  # Pre-fill the form with existing user data
+    form = ProfileForm(obj=user)
 
     if form.validate_on_submit():
         user.name = form.name.data
-        user.age = int(form.age.data)  # Convert Decimal to int
+        user.age = int(form.age.data)
         user.field = form.field.data
         user.location = form.location.data
-        update_user_location(user.id, user.location)
-        user.self_description = form.self_description.data  # Corrected to match the form field name
+        user.location_lat, user.location_lng = get_coordinates(user.pLocation)
+        if user.location_lat is None or user.location_lng is None:
+            flash('Invalid location. Please enter a valid location.')
+            return render_template('preferences.html', title='Preferences', form=form)
+        user.self_description = form.self_description.data
         user.experience = form.experience.data
         user.strength = form.strength.data
         user.goals = form.goals.data
-        
-        db.session.commit()  # Save the updated user data to the database
 
-        flash('Profile updated successfully! Please log in.')
+        if 'profile_photo' in request.files:
+            file = request.files['profile_photo']
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                file.save(file_path)
+                # Crop and resize the image
+                image = Image.open(file_path)
+                image = crop_center(image, PHOTO_SIZE, PHOTO_SIZE)  # Crop and resize to 125x125 pixels
+                image.save(file_path)
+
+                user.profile_photo = url_for('static', filename='uploads/' + filename)
+        
+        db.session.commit()
+        flash('Profile updated successfully!')
+        return redirect(url_for('preferences', user_id = user_id))
+    
+    return render_template('profile.html', title='Profile', form=form)
+
+def crop_center(pil_img, crop_width, crop_height):
+    img_width, img_height = pil_img.size
+    return pil_img.crop(((img_width - crop_width) // 2,
+                         (img_height - crop_height) // 2,
+                         (img_width + crop_width) // 2,
+                         (img_height + crop_height) // 2))
+
+
+@app.route('/preferences/<int:user_id>', methods=['GET', 'POST'])
+def preferences(user_id):
+    user = User.query.get(user_id)
+    if not user:
+        flash('Invalid user. Please sign up first.')
+        return redirect(url_for('signup'))
+
+    form = PreferencesForm(obj=user)
+
+    if form.validate_on_submit():
+        user.pAge = int(form.pAge.data)
+        user.pField = form.pField.data
+        user.pLocation = form.pLocation.data
+        user.pLocation_lat, user.pLocation_lng = get_coordinates(user.pLocation)
+        if user.pLocation_lat is None or user.pLocation_lng is None:
+            flash('Invalid location. Please enter a valid location.')
+            return render_template('preferences.html', title='Preferences', form=form)
+        user.pGoals = form.pGoals.data
+        user.pQualities = form.pQualities.data
+        db.session.commit()
+
+        flash('Profile updated successfully!')
         return redirect(url_for('login'))
 
-    return render_template('profile.html', title='Profile', form=form)
+    return render_template('preferences.html', title='Preferences', form=form)
 
 @app.route('/users')
 @login_required
@@ -106,10 +174,56 @@ def logout():
 @login_required
 @app.route('/swipes')
 def swipes():
-    # return render_template('swipes.html', user=jsonify(convert_to_dict(recommend_user(session.get('user_id')))))
-    return render_template('swipes.html', user={})
 
-@app.route('/dislike', methods=['POST'])
-def dislike():
-    add_like(session.get('user_id'), request.form['user_id'], False)
-    return jsonify(convert_to_dict(recommend_user(session.get('user_id'))))
+    # Fetch the current user from the database
+    current_id = recommend_user(session.get('user_id'))
+    # current_id = 12
+    user = User.query.get(current_id)
+    
+    # Ensure the user exists
+    if user is None:
+        return "User not found", 404
+    
+    # Prepare user data for rendering
+    user_data = {
+        'name': user.name,
+        'location': user.location,
+        'description': user.self_description,
+        'background': user.experience,
+        'word1': user.strength,
+        'word2': 'Innovative',
+        'word3': 'Dedicated',
+        'image_url': user.profile_photo,  # Include image URL in user data
+    }
+    
+    return render_template('swipes.html', user=user_data)
+
+@app.route('/swipe/<action>', methods=['POST'])
+@login_required
+def swipe(action):
+    current_user_id = session.get('user_id')
+    swiped_user_id = request.form.get('swiped_user_id')
+    
+    if action == 'like':
+        # Handle the like action (e.g., store in the database)
+        pass
+    elif action == 'dislike':
+        # Handle the dislike action (e.g., store in the database)
+        pass
+    
+    # Redirect to the swipes page to show a new random user
+    return redirect(url_for('swipes'))
+
+@app.route('/chat/<int:recipient_id>')
+def chat(recipient_id):
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    
+    user = User.query.get(session['user_id'])
+    recipient = User.query.get(recipient_id)
+    
+    if not recipient:
+        flash('User not found')
+        return redirect(url_for('login'))  # Redirect to some home page
+
+    return render_template('chat.html', username=user.username, recipient_username=recipient.username, recipient_id=recipient.id)
