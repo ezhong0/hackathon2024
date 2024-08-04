@@ -8,6 +8,7 @@ from app.algorithm import *
 import os
 from werkzeug.utils import secure_filename
 from PIL import Image
+from .algorithm import recommend_user
 
 # Define the upload folder and allowed extensions
 UPLOAD_FOLDER = os.path.join('app', 'static', 'uploads')
@@ -92,6 +93,10 @@ def profile(user_id):
         user.age = int(form.age.data)
         user.field = form.field.data
         user.location = form.location.data
+        user.location_lat, user.location_lng = get_coordinates(user.pLocation)
+        if user.location_lat is None or user.location_lng is None:
+            flash('Invalid location. Please enter a valid location.')
+            return render_template('preferences.html', title='Preferences', form=form)
         user.self_description = form.self_description.data
         user.experience = form.experience.data
         user.strength = form.strength.data
@@ -129,6 +134,9 @@ def preferences(user_id):
         user.pField = form.pField.data
         user.pLocation = form.pLocation.data
         user.pLocation_lat, user.pLocation_lng = get_coordinates(user.pLocation)
+        if user.pLocation_lat is None or user.pLocation_lng is None:
+            flash('Invalid location. Please enter a valid location.')
+            return render_template('preferences.html', title='Preferences', form=form)
         user.pGoals = form.pGoals.data
         user.pQualities = form.pQualities.data
         db.session.commit()
@@ -166,7 +174,8 @@ def logout():
 def swipes():
 
     # Fetch the current user from the database
-    current_id = recomend_user(session.user_id)
+    # current_id = recommend_user(session.get('user_id'))
+    current_id = 12
     user = User.query.get(current_id)
     
     # Ensure the user exists

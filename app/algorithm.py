@@ -33,7 +33,7 @@ def get_coordinates(address):
         location = data[0]
         return location['lat'], location['lon']
     else:
-        raise Exception("Error fetching coordinates or address not found")
+        return None
 
 
 def update_user_location(user_id, address):
