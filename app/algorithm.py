@@ -9,6 +9,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 import requests
 import math
 from .models import db, User
+from datetime import datetime, timedelta
 
 def get_coordinates(address):
     url = "https://nominatim.openstreetmap.org/search"
@@ -81,3 +82,62 @@ def location_similarity(loc1, loc2):
 def description_similarity(desc1, desc2):
     tfidf = TfidfVectorizer().fit_transform([desc1, desc2])
     return cosine_similarity(tfidf[0:1], tfidf[1:2])[0][0]
+
+def add_like(user_id, liked_user_id, is_like=True):
+    if user_id == liked_user_id:
+        raise Exception("You cannot like/dislike yourself.")
+    
+    existing_like = Like.query.filter_by(user_id=user_id, liked_user_id=liked_user_id).first()
+    if existing_like:
+        existing_like.is_like = is_like
+        db.session.commit()
+        return "Like/Dislike updated"
+    
+    new_like = Like(user_id=user_id, liked_user_id=liked_user_id, is_like=is_like)
+    db.session.add(new_like)
+    db.session.commit()
+    return "Like/Dislike added"
+
+def remove_like(user_id, liked_user_id):
+    like_to_remove = Like.query.filter_by(user_id=user_id, liked_user_id=liked_user_id).first()
+    if like_to_remove:
+        db.session.delete(like_to_remove)
+        db.session.commit()
+        return "Like/Dislike removed"
+    return "Like/Dislike does not exist"
+
+def calculate_similarity(user1, user2, user_id):
+    age_sim = age_similarity(user1.age, user2.age)
+    loc_sim = location_similarity(user1, user2)
+    desc_sim = description_similarity(user1.self_description, user2.self_description)
+    field_sim = field_similarity(user1.field, user2.field)
+    goals_sim = goals_similarity(user1.goals, user2.goals)
+    
+    base_similarity = (0.2 * age_sim) + (0.1 * loc_sim) + (0.7 * desc_sim) + (0.5 * field_sim) + (0.7 * goals_sim)
+
+    recent_likes = Like.query.filter_by(user_id=user_id, liked_user_id=user2.id).order_by(Like.timestamp.desc()).first()
+    if recent_likes and recent_likes.is_like:
+        base_similarity += 0.5
+    elif recent_likes and not recent_likes.is_like:
+        base_similarity -= 0.5
+    
+    
+    if Like.query.filter_by(user_id=user2.id, liked_user_id=user1.id, is_like=True).first():
+        base_similarity += 0.3 #start chat maybe?
+
+    return base_similarity
+
+def recommend_user(target_user_id):
+    target_user = User.query.get(target_user_id)
+    all_users = User.query.filter(User.id != target_user_id).all()
+    
+    best_recommendation = None
+    best_similarity = -float('inf')
+    
+    for user in all_users:
+        similarity = calculate_similarity(target_user, user, target_user_id)
+        if similarity > best_similarity:
+            best_similarity = similarity
+            best_recommendation = user
+
+    return best_recommendation
