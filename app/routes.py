@@ -175,8 +175,8 @@ def logout():
 def swipes():
 
     # Fetch the current user from the database
-    # current_id = recommend_user(session.get('user_id'))
-    current_id = 12
+    current_id = recommend_user(session.get('user_id'))
+    # current_id = 12
     user = User.query.get(current_id)
     
     # Ensure the user exists
@@ -196,3 +196,19 @@ def swipes():
     }
     
     return render_template('swipes.html', user=user_data)
+
+@app.route('/swipe/<action>', methods=['POST'])
+@login_required
+def swipe(action):
+    current_user_id = session.get('user_id')
+    swiped_user_id = request.form.get('swiped_user_id')
+    
+    if action == 'like':
+        # Handle the like action (e.g., store in the database)
+        pass
+    elif action == 'dislike':
+        # Handle the dislike action (e.g., store in the database)
+        pass
+    
+    # Redirect to the swipes page to show a new random user
+    return redirect(url_for('swipes'))

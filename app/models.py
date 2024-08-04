@@ -28,6 +28,8 @@ class User(db.Model):
     pAge: so.Mapped[Optional[int]] = so.mapped_column(sa.Integer)
     pField: so.Mapped[Optional[str]] = so.mapped_column(sa.String(100))
     pLocation: so.Mapped[Optional[str]] = so.mapped_column(sa.String(100))
+    pLocation_lat: so.Mapped[Optional[float]] = so.mapped_column(sa.Float)
+    pLocation_lng: so.Mapped[Optional[float]] = so.mapped_column(sa.Float)
     pGoals: so.Mapped[Optional[str]] = so.mapped_column(sa.Text)
     pQualities: so.Mapped[Optional[str]] = so.mapped_column(sa.Text)    
     def __repr__(self):

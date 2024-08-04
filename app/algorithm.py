@@ -10,6 +10,7 @@ import requests
 import math
 from .models import db, User
 from datetime import datetime, timedelta
+import random
 
 def get_coordinates(address):
     url = "https://nominatim.openstreetmap.org/search"
@@ -27,7 +28,8 @@ def get_coordinates(address):
     if response.status_code == 200:
         data = response.json()
     else:
-        raise Exception(f"Error: {response.status_code}")
+        return 0,0
+       #raise Exception(f"Error: {response.status_code}")
     
     if data:
         location = data[0]
@@ -131,13 +133,15 @@ def recommend_user(target_user_id):
     target_user = User.query.get(target_user_id)
     all_users = User.query.filter(User.id != target_user_id).all()
     
-    best_recommendation = None
-    best_similarity = -float('inf')
-    
-    for user in all_users:
-        similarity = calculate_similarity(target_user, user, target_user_id)
-        if similarity > best_similarity:
-            best_similarity = similarity
-            best_recommendation = user
+    return random.choice(all_users).id
 
-    return best_recommendation
+    # best_recommendation = None
+    # best_similarity = -float('inf')
+    
+    # for user in all_users:
+    #     similarity = calculate_similarity(target_user, user, target_user_id)
+    #     if similarity > best_similarity:
+    #         best_similarity = similarity
+    #         best_recommendation = user
+
+    # return best_recommendation
