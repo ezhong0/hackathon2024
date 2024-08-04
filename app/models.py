@@ -23,6 +23,8 @@ class User(db.Model):
     strength: so.Mapped[Optional[str]] = so.mapped_column(sa.Text)
     goals: so.Mapped[Optional[str]] = so.mapped_column(sa.Text)
 
+    profile_photo: so.Mapped[Optional[str]] = so.mapped_column(sa.String(256))  # Store filename or URL
+
     def __repr__(self):
         return (
             f'<User(id={self.id}, username={self.username}, email={self.email}, '
