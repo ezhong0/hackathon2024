@@ -1,69 +1,123 @@
-{% extends "base.html" %}
-
-{% block head %}
-<link rel="stylesheet" href="{{ url_for('static', filename='swipes.css') }}" />
-{% endblock %}
-
-{% block body %}
+{% extends "base.html" %} {% block head %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='swipes.css') }}"
+/>
+{% endblock %} {% block body %}
 <body>
-  <div class="card" id="userCard">
-      <div class="card-front">
-        <div class="image-placeholder">
-          {% if user.image_url %}
-            <img src="{{ user.image_url }}" alt="{{ user.name }}'s profile photo" class="profile-image" />
-          {% else %}
-            <div class="default-image">No Image</div>
-          {% endif %}
-        </div>
-        <h2>{{ user.name }}</h2>
-        <p class="category">Description:</p>
-        <p>{{ user.description }}</p>
-        <p class="category">Location:</p>
-        <p>{{ user.location }}</p>
-        <div class="like-dislike">
-          <form action="{{ url_for('swipe', action='dislike') }}" method="post">
-              <input type="hidden" name="swiped_user_id" value="{{ user.id }}">
-              <button type="submit" class="dislike">Dislike</button>
-          </form>
-          <form action="{{ url_for('swipe', action='like') }}" method="post">
-              <input type="hidden" name="swiped_user_id" value="{{ user.id }}">
-              <button type="submit" class="like">Like</button>
-          </form>
+  <div
+    class="card"
+    id="userCard"
+  >
+    <div class="card-front">
+      <div class="image-placeholder">
+        {% if user.image_url %}
+        <img
+          src="{{ user.image_url }}"
+          alt="{{ user.name }}'s profile photo"
+          class="profile-image"
+        />
+        {% else %}
+        <div class="default-image">No Image</div>
+        {% endif %}
       </div>
-      </div>
-      <div class="card-back">
-        <h3>My Business:</h3>
-        <p>{{ user.company }}</p>
-        <p class="category">Experience:</p>
-        <p>{{ user.background }}</p>
-        <p class="category">Hobbies:</p>
-        <p>{{ user.word1 }}, {{ user.word2 }}, {{ user.word3 }}</p>
-        <div class="like-dislike">
-          <form action="{{ url_for('swipe', action='dislike') }}" method="post">
-              <input type="hidden" name="swiped_user_id" value="{{ user.id }}">
-              <button type="submit" class="dislike">Dislike</button>
-          </form>
-          <form action="{{ url_for('swipe', action='like') }}" method="post">
-              <input type="hidden" name="swiped_user_id" value="{{ user.id }}">
-              <button type="submit" class="like">Like</button>
-          </form>
-      </div>
+      <h2>{{ user.name }}</h2>
+      <p class="category">Description:</p>
+      <p>{{ user.description }}</p>
+      <p class="category">Location:</p>
+      <p>{{ user.location }}</p>
+      <div class="like-dislike">
+        <form
+          action="{{ url_for('swipe', action='dislike') }}"
+          method="post"
+        >
+          <input
+            type="hidden"
+            name="swiped_user_id"
+            value="{{ user.id }}"
+          />
+          <button
+            type="submit"
+            class="dislike"
+          >
+            Dislike
+          </button>
+        </form>
+        <form
+          action="{{ url_for('swipe', action='like') }}"
+          method="post"
+        >
+          <input
+            type="hidden"
+            name="swiped_user_id"
+            value="{{ user.id }}"
+          />
+          <button
+            type="submit"
+            class="like"
+          >
+            Like
+          </button>
+        </form>
       </div>
     </div>
+    <div class="card-back">
+      <h3>My Business:</h3>
+      <p>{{ user.company }}</p>
+      <p class="category">Experience:</p>
+      <p>{{ user.background }}</p>
+      <p class="category">Hobbies:</p>
+      <p>{{ user.word1 }}, {{ user.word2 }}, {{ user.word3 }}</p>
+      <div class="like-dislike">
+        <form
+          action="{{ url_for('swipe', action='dislike') }}"
+          method="post"
+        >
+          <input
+            type="hidden"
+            name="swiped_user_id"
+            value="{{ user.id }}"
+          />
+          <button
+            type="submit"
+            class="dislike"
+          >
+            Dislike
+          </button>
+        </form>
+        <form
+          action="{{ url_for('swipe', action='like') }}"
+          method="post"
+        >
+          <input
+            type="hidden"
+            name="swiped_user_id"
+            value="{{ user.id }}"
+          />
+          <button
+            type="submit"
+            class="like"
+          >
+            Like
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
 
-    <script>
-      document.getElementById("userCard").addEventListener("click", flipCard);
-      function flipCard() {
-        document.getElementById("userCard").classList.toggle("flipped");
-      }
+  <script>
+    document.getElementById("userCard").addEventListener("click", flipCard);
+    function flipCard() {
+      document.getElementById("userCard").classList.toggle("flipped");
+    }
 
-      function likeUser() {
-        console.log("Liked user");
-      }
+    function likeUser() {
+      console.log("Liked user");
+    }
 
-      function dislikeUser() {
-        // TODO: Add functionality for disliking the user
-      }
-    </script>
+    function dislikeUser() {
+      // TODO: Add functionality for disliking the user
+    }
+  </script>
 </body>
 {% endblock %}
