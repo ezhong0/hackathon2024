@@ -1,8 +1,9 @@
-from werkzeug.security import generate_password_hash, check_password_hash
 from typing import Optional
 import sqlalchemy as sa
 import sqlalchemy.orm as so
 from app import db
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import relationship
 
 class User(db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
@@ -15,6 +16,8 @@ class User(db.Model):
     age: so.Mapped[Optional[int]] = so.mapped_column(sa.Integer)
     field: so.Mapped[Optional[str]] = so.mapped_column(sa.String(100))
     location: so.Mapped[Optional[str]] = so.mapped_column(sa.String(100))
+    location_lat: so.Mapped[Optional[float]] = so.mapped_column(sa.Float)
+    location_lng: so.Mapped[Optional[float]] = so.mapped_column(sa.Float)
     self_description: so.Mapped[Optional[str]] = so.mapped_column(sa.Text)
     experience: so.Mapped[Optional[str]] = so.mapped_column(sa.Text)
     strength: so.Mapped[Optional[str]] = so.mapped_column(sa.Text)
@@ -27,11 +30,19 @@ class User(db.Model):
             f'location={self.location}, self_description={self.self_description}, '
             f'experience={self.experience}, strength={self.strength}, goals={self.goals})>'
         )
-    
-    def set_password(self, password: str):
-        """Hashes the password and sets it to the password_hash field."""
-        self.password_hash = generate_password_hash(password)
 
-    def check_password(self, password: str) -> bool:
-        """Checks the provided password against the stored password hash."""
-        return check_password_hash(self.password_hash, password)
+
+class Feedback(db.Model):
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    user_id: so.Mapped[int] = so.mapped_column(ForeignKey('user.id'))
+    target_user_id: so.Mapped[int] = so.mapped_column(ForeignKey('user.id'))
+    like: so.Mapped[bool] = so.mapped_column(sa.Boolean)
+
+    user = relationship('User', foreign_keys=[user_id])
+    target_user = relationship('User', foreign_keys=[target_user_id])
+
+    def __repr__(self):
+        return (
+            f'<Feedback(id={self.id}, user_id={self.user_id}, '
+            f'target_user_id={self.target_user_id}, like={self.like})>'
+        )
