@@ -1,98 +1,104 @@
-{% extends "base.html" %} {% block head %}
-<link
-  rel="stylesheet"
-  href="{{ url_for('static', filename='login.css') }}"
-/>
-{% endblock %} {% block body %}
+{% extends "base.html" %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}" />
+{% endblock %}
+
+{% block body %}
 <div class="container">
   <div class="title">
-    <img
-      src="{{ url_for('static', filename='images/logo.svg') }}"
-      alt="logo"
-      class="logo"
-    />
-    <h2>Register your Account</h2>
+    <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="logo" class="logo" />
+    <h2>Register Your Account</h2>
   </div>
 
-  <form
-    action=""
-    method="post"
-    novalidate
-  >
+  <form action="" method="post" enctype="multipart/form-data" novalidate>
     {{ form.hidden_tag() }}
-    <!-- name -->
-    <p>
-      {{ form.name.label }}<br />
-      {{ form.name(size=32, class_='form-control') }}<br />
+
+    <!-- Name -->
+    <div class="form-group">
+      {{ form.name.label(class_='form-label') }}
+      {{ form.name(class_='form-control', size=32) }}
       {% for error in form.name.errors %}
-      <span style="color: red">[{{ error }}]</span>
+        <span class="text-danger">[{{ error }}]</span>
       {% endfor %}
-    </p>
+    </div>
 
-    <!-- age -->
-    <p>
-      {{ form.age.label }}<br />
-      {{ form.age(size=32, class_='form-control') }}<br />
+    <!-- Age -->
+    <div class="form-group">
+      {{ form.age.label(class_='form-label') }}
+      {{ form.age(class_='form-control', size=32) }}
       {% for error in form.age.errors %}
-      <span style="color: red">[{{ error }}]</span>
+        <span class="text-danger">[{{ error }}]</span>
       {% endfor %}
-    </p>
+    </div>
 
-    <!-- field -->
-    <p>
-      {{ form.field.label }}<br />
-      {{ form.field(size=32, class_='form-control') }}<br />
+    <!-- Field -->
+    <div class="form-group">
+      {{ form.field.label(class_='form-label') }}
+      {{ form.field(class_='form-control', size=32) }}
       {% for error in form.field.errors %}
-      <span style="color: red">[{{ error }}]</span>
+        <span class="text-danger">[{{ error }}]</span>
       {% endfor %}
-    </p>
+    </div>
 
-    <!-- location -->
-    <p>
-      {{ form.location.label }}<br />
-      {{ form.location(size=32, class_='form-control') }}<br />
+    <!-- Location -->
+    <div class="form-group">
+      {{ form.location.label(class_='form-label') }}
+      {{ form.location(class_='form-control', size=32) }}
       {% for error in form.location.errors %}
-      <span style="color: red">[{{ error }}]</span>
+        <span class="text-danger">[{{ error }}]</span>
       {% endfor %}
-    </p>
+    </div>
 
-    <!-- selfDescription -->
-    <p>
-      {{ form.self_description.label }}<br />
-      {{ form.self_description(size=32, class_ = 'form-control') }}<br />
+    <!-- Self Description -->
+    <div class="form-group">
+      {{ form.self_description.label(class_='form-label') }}
+      {{ form.self_description(class_='form-control', size=32) }}
       {% for error in form.self_description.errors %}
-      <span style="color: red">[{{ error }}]</span>
+        <span class="text-danger">[{{ error }}]</span>
       {% endfor %}
-    </p>
+    </div>
 
-    <!-- experience -->
-    <p>
-      {{ form.experience.label }}<br />
-      {{ form.experience(size=32, class_='form-control') }}<br />
+    <!-- Experience -->
+    <div class="form-group">
+      {{ form.experience.label(class_='form-label') }}
+      {{ form.experience(class_='form-control', size=32) }}
       {% for error in form.experience.errors %}
-      <span style="color: red">[{{ error }}]</span>
+        <span class="text-danger">[{{ error }}]</span>
       {% endfor %}
-    </p>
+    </div>
 
-    <!-- strength -->
-    <p>
-      {{ form.strength.label }}<br />
-      {{ form.strength(size=32, class_='form-control') }}<br />
+    <!-- Strength -->
+    <div class="form-group">
+      {{ form.strength.label(class_='form-label') }}
+      {{ form.strength(class_='form-control', size=32) }}
       {% for error in form.strength.errors %}
-      <span style="color: red">[{{ error }}]</span>
+        <span class="text-danger">[{{ error }}]</span>
       {% endfor %}
-    </p>
+    </div>
 
-    <!-- goals -->
-    <p>
-      {{ form.goals.label }}<br />
-      {{ form.goals(size=32, class_='form-control') }}<br />
+    <!-- Goals -->
+    <div class="form-group">
+      {{ form.goals.label(class_='form-label') }}
+      {{ form.goals(class_='form-control', size=32) }}
       {% for error in form.goals.errors %}
-      <span style="color: red">[{{ error }}]</span>
+        <span class="text-danger">[{{ error }}]</span>
       {% endfor %}
-    </p>
+    </div>
 
-    <p>{{ form.submit(class_='btn btn-primary') }}</p>
+    <!-- Profile Photo -->
+    <div class="form-group">
+      {{ form.profile_photo.label(class_='form-label') }}
+      {{ form.profile_photo(class_='form-control') }}
+      {% for error in form.profile_photo.errors %}
+        <span class="text-danger">[{{ error }}]</span>
+      {% endfor %}
+    </div>
+
+    <!-- Submit Button -->
+    <div class="form-group">
+      <p>{{ form.submit(class_='btn btn-primary') }}</p>
+    </div>
   </form>
 </div>
 {% endblock %}

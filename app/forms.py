@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, DecimalField
 from wtforms.validators import DataRequired, Email, EqualTo, Length
+from flask_wtf.file import FileField, FileRequired
 
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
@@ -25,3 +26,4 @@ class ProfileForm(FlaskForm):
     strength = StringField('Strengths/Skills')
     goals = StringField('Aspirations')
     submit = SubmitField('Create Account')
+    profile_photo = FileField('Profile Photo', validators=[FileRequired()])

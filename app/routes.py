@@ -1,10 +1,28 @@
-from flask import render_template, flash, redirect, url_for, session
-from werkzeug.security import generate_password_hash, check_password_hash  # Import hashing functions
+from flask import render_template, flash, redirect, url_for, session, request
+from werkzeug.security import generate_password_hash, check_password_hash
 from app import app
 from functools import wraps
 from app.forms import LoginForm, SignUpForm, ProfileForm
 from .models import db, User
 from app.algorithm import *
+import os
+from werkzeug.utils import secure_filename
+from PIL import Image
+
+# Define the upload folder and allowed extensions
+UPLOAD_FOLDER = os.path.join('app', 'static', 'uploads')
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}  # Define allowed file extensions
+PHOTO_SIZE = 125
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+# Create the uploads directory if it doesn't exist
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
+
+# Function to check if the file extension is allowed
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def login_required(f):
     @wraps(f)
@@ -62,30 +80,49 @@ def signup():
 
 @app.route('/profile/<int:user_id>', methods=['GET', 'POST'])
 def profile(user_id):
-    user = User.query.get(user_id)  # Fetch the user from the database
+    user = User.query.get(user_id)
     if not user:
         flash('Invalid user. Please sign up first.')
         return redirect(url_for('signup'))
 
-    form = ProfileForm(obj=user)  # Pre-fill the form with existing user data
+    form = ProfileForm(obj=user)
 
     if form.validate_on_submit():
         user.name = form.name.data
-        user.age = int(form.age.data)  # Convert Decimal to int
+        user.age = int(form.age.data)
         user.field = form.field.data
         user.location = form.location.data
-        update_user_location(user.id, user.location)
-        user.self_description = form.self_description.data  # Corrected to match the form field name
+        user.self_description = form.self_description.data
         user.experience = form.experience.data
         user.strength = form.strength.data
         user.goals = form.goals.data
         
-        db.session.commit()  # Save the updated user data to the database
+        if 'profile_photo' in request.files:
+            file = request.files['profile_photo']
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                file.save(file_path)
 
-        flash('Profile updated successfully! Please log in.')
+                # Crop and resize the image
+                image = Image.open(file_path)
+                image = crop_center(image, PHOTO_SIZE, PHOTO_SIZE)  # Crop and resize to 125x125 pixels
+                image.save(file_path)
+
+                user.profile_photo = url_for('static', filename='uploads/' + filename)
+        
+        db.session.commit()
+        flash('Profile updated successfully!')
         return redirect(url_for('login'))
 
     return render_template('profile.html', title='Profile', form=form)
+
+def crop_center(pil_img, crop_width, crop_height):
+    img_width, img_height = pil_img.size
+    return pil_img.crop(((img_width - crop_width) // 2,
+                         (img_height - crop_height) // 2,
+                         (img_width + crop_width) // 2,
+                         (img_height + crop_height) // 2))
 
 @app.route('/users')
 @login_required
@@ -105,15 +142,25 @@ def logout():
 @login_required
 @app.route('/swipes')
 def swipes():
-    user = {
-        'name': 'John Doe',
-        'location': 'San Francisco, CA',
-        'company': 'Tech Co.',
-        'description': 'A passionate developer.',
-        'background': '5 years in software development.',
-        'word1': 'Innovative',
-        'word2': 'Dedicated',
-        'word3': 'Team Player',
-    }
-    return render_template('swipes.html', user=user)
+
+    # Fetch the current user from the database
+    current_id = 22 #hardcoded
+    user = User.query.get(current_id)
     
+    # Ensure the user exists
+    if user is None:
+        return "User not found", 404
+    
+    # Prepare user data for rendering
+    user_data = {
+        'name': user.name,
+        'location': user.location,
+        'description': user.self_description,
+        'background': user.experience,
+        'word1': user.strength,
+        'word2': 'Innovative',
+        'word3': 'Dedicated',
+        'image_url': user.profile_photo,  # Include image URL in user data
+    }
+    
+    return render_template('swipes.html', user=user_data)
